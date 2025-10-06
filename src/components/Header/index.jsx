@@ -25,10 +25,29 @@ export default function Header(){
                     <button className='search-btn'>
                       <ion-icon name="search-outline"></ion-icon>
                     </button>
+
                     
                 </div>
 
             </div>
+
+
+            {/* Botões */}
+
+            <nav className='navbar'>
+                
+                <ul>
+                    <li>
+                        <Link to='/signin' className='entrarBtn'>Entrar</Link>
+                    </li>
+
+                    <li>
+                        <Link to='/' className='anunciarBtn'>Anunciar grátis</Link>
+                    </li>
+                    
+                </ul>
+
+            </nav>
 
         </header>
     )

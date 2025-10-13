@@ -1,10 +1,42 @@
 import './signin.css'
 import { FcGoogle } from 'react-icons/fc'
 import { FaFacebookF } from 'react-icons/fa'
-
+import { useState } from 'react'
+import { signInWithGooglePopup } from '../../firebase';
 
 
 export default function Signin(){
+
+    const [loading,setLoading] = useState(false);
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState(null);
+
+    async function handleGoogleSingIn() {
+        setLoading(true);
+        setError(null);
+
+        try{
+            const userObj = await signInWithGooglePopup();
+            setUser({
+
+                name: userObj.displayName,
+                email: userObj.email,
+                photoURL: userObj.photoURL,
+                uid: userObj.uid,
+            });
+
+            console.log('Usuario logado:', userObj);
+
+        }catch(err){
+
+            console.error('ESSE È O ERRO:', err);
+            setError(err.message || 'erro no login')
+
+        }finally{
+            setLoading(false);
+        }
+    }
+
     return(
         <div className='container'>
 
@@ -14,7 +46,10 @@ export default function Signin(){
 
                 <div className='socialLogin'>
 
-                    <button className='google'>
+                    <button className='google'
+                        onClick={handleGoogleSingIn}
+                        disabled={loading}
+                        aria-label='Entrar com o google'>
                         <FcGoogle size={24}/>
                     </button>
 
@@ -34,6 +69,23 @@ export default function Signin(){
                 <button className='acessarBtn'>Acessar</button>
 
                 <p className='register'>Não tem conta??? <a href='/signup'>Cadastrae-se</a></p>
+
+                {error && <p style={{ color: 'red', marginTop: 12}}>{error}</p>}
+
+                { user && (
+                    <div className='userInfo' style={{ marginTop: 16}}> 
+                        <img src={user.photoURL}
+                             alt={user.name}
+                             style={{ width: 48, borderRadius: '50%'}}/>
+
+                        <div>
+                            <p><strong>{user.name}</strong></p>
+                            <p style={{fontSize: 12 }}>{user.email}</p>
+                            
+                        </div>     
+                    </div>
+
+                )}
 
             </div>
 
